@@ -7,8 +7,12 @@ import com.cy.store.mapper.UserMapper;
 import com.cy.store.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Locale;
+import java.util.UUID;
 
 /**
  * @author yangchuantang
@@ -30,7 +34,16 @@ public class UserServiceImpl implements IUserService {
             throw new UsernameDuplicatedException("用户名被占用");
         }
 
+        // 密码加密处理 ：md5
+        // 盐值 + password + 盐值 ----盐值就是一个随机的字符串而已
+        String oldPassword = user.getPassword();
+        // 获取盐值
+        String salt = UUID.randomUUID().toString().toUpperCase();
+        // 将密码和盐值作为一个整体进行加密操作
+        String md5Password = getMD5Password(oldPassword, salt);
+
         // 执行注册业务功能的实习,
+        user.setPassword(md5Password);
         user.setIsDelete(0);
         user.setCreatedUser(user.getUsername());
         user.setModifiedUser(user.getCreatedUser());
@@ -43,5 +56,17 @@ public class UserServiceImpl implements IUserService {
         }
 
 
+    }
+
+    /** 定义一个md5算法的加密处理 */
+    private String getMD5Password (String password, String salt){
+        // md5加密算法
+        DigestUtils.md5DigestAsHex((salt+password+salt).getBytes()).toUpperCase();
+        for(int i = 0;i<3;i++){
+           password = DigestUtils.md5DigestAsHex((salt+password+salt).getBytes()).toUpperCase();
+        }
+        // 加密之后的操作
+
+        return password;
     }
 }
