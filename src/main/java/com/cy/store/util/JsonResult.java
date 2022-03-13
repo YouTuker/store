@@ -23,5 +23,9 @@ public class JsonResult<E> implements Serializable {
     public JsonResult(Integer state){
         this.state = state;
     }
+    public JsonResult(Integer state, E data){
+        this.state = state;
+        this.data = data;
+    }
 
 }

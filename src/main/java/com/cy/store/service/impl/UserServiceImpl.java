@@ -2,6 +2,8 @@ package com.cy.store.service.impl;
 
 import com.cy.store.entity.User;
 import com.cy.store.exception.InsertException;
+import com.cy.store.exception.PasswordNotMatchException;
+import com.cy.store.exception.UserNotFoundException;
 import com.cy.store.exception.UsernameDuplicatedException;
 import com.cy.store.mapper.UserMapper;
 import com.cy.store.service.IUserService;
@@ -69,5 +71,19 @@ public class UserServiceImpl implements IUserService {
         // 加密之后的操作
 
         return password;
+    }
+
+    @Override
+    public User login(String username, String password){
+        User userByUserName = userMapper.getUserByUserName(username);
+        if (userByUserName==null){
+            throw new UserNotFoundException();
+        }
+        if (!password.equals(userByUserName.getPassword())){
+            throw new PasswordNotMatchException();
+        }
+
+        return userByUserName;
+
     }
 }
