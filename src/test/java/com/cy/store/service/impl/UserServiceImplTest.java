@@ -23,8 +23,9 @@ class UserServiceImplTest {
     void reg() {
         User user = new User();
         user.setPhone("13170221980");
-        user.setUsername("王伟");
+        user.setUsername("张飞");
         user.setPassword("123456");
         iUserService.reg(user);
     }
+
 }

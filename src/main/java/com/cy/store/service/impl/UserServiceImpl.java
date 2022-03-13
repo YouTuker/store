@@ -44,6 +44,7 @@ public class UserServiceImpl implements IUserService {
 
         // 执行注册业务功能的实习,
         user.setPassword(md5Password);
+        user.setSalt(salt);
         user.setIsDelete(0);
         user.setCreatedUser(user.getUsername());
         user.setModifiedUser(user.getCreatedUser());
